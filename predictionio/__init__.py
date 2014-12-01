@@ -14,14 +14,19 @@ __version__ = "0.7.0"
 
 # import packages
 import re
+import json
+
 try:
   import httplib
 except ImportError:
   # pylint: disable=F0401
   # http is a Python3 module, replacing httplib
   from http import client as httplib
-import json
-import urllib
+
+try:
+  from urllib import quote
+except ImportError:
+  from urllib.parse import quote
 
 from predictionio.connection import Connection
 from predictionio.connection import AsyncRequest
@@ -278,7 +283,7 @@ class Client(object):
       of this asynchronous request.
     """
 
-    enc_uid = urllib.quote(uid, "")  # replace special char with %xx
+    enc_uid = quote(uid, "")  # replace special char with %xx
     path = "%s/users/%s.json" % (self.apiversion, enc_uid)
     request = AsyncRequest("GET", path, pio_appkey=self.appkey)
     request.set_rfunc(self._aget_user_resp)
@@ -321,7 +326,7 @@ class Client(object):
       of this asynchronous request.
     """
 
-    enc_uid = urllib.quote(uid, "")  # replace special char with %xx
+    enc_uid = quote(uid, "")  # replace special char with %xx
     path = "%s/users/%s.json" % (self.apiversion, enc_uid)
     request = AsyncRequest("DELETE", path, pio_appkey=self.appkey)
     request.set_rfunc(self._adelete_user_resp)
@@ -414,7 +419,7 @@ class Client(object):
       AsyncRequest object as argument to get the final result or status
       of this asynchronous request.
     """
-    enc_iid = urllib.quote(iid, "")
+    enc_iid = quote(iid, "")
     path = "%s/items/%s.json" % (self.apiversion, enc_iid)
     request = AsyncRequest("GET", path, pio_appkey=self.appkey)
     request.set_rfunc(self._aget_item_resp)
@@ -460,7 +465,7 @@ class Client(object):
       of this asynchronous request.
     """
 
-    enc_iid = urllib.quote(iid, "")
+    enc_iid = quote(iid, "")
     path = "%s/items/%s.json" % (self.apiversion, enc_iid)
     request = AsyncRequest("DELETE", path, pio_appkey=self.appkey)
     request.set_rfunc(self._adelete_item_resp)

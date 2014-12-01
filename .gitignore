@@ -8,3 +8,6 @@ dist/
 MANIFEST
 docs/build/
 tests_env/
+venv27/
+venv34/
+tests/predictionio_test_local.py
