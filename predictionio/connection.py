@@ -21,6 +21,7 @@ except ImportError:
 
 import datetime
 import logging
+import cgi
 
 # use generators for python2 and python3
 try:
@@ -238,6 +239,13 @@ class PredictionIOHttpConnection(object):
           # NOTE: have to read the response before sending out next
           # http request
           resp_body = resp.read()  # str
+
+          # decode response body if charset provided
+          _, params = cgi.parse_header(resp_headers.get('Content-Type', ''))
+          encoding = params.get('charset', None)
+          if encoding:
+            resp_body = resp_body.decode(encoding)
+
           response.set_resp(version=resp_version, status=resp_status,
                     reason=resp_reason, headers=resp_headers,
                     body=resp_body)
